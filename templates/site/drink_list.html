@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load split_filter %}
+
+{% block title %}Drinks List{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Coffee & Tea Drinks</h1>
+
+    <div class="text-end mb-3">
+        <a href="{% url 'admin:sitepages_drink_add' %}" class="btn btn-success">➕ Add a New Drink</a>
+    </div>
+
+    <div class="row">
+        {% for drink in drinks %}
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">{{ drink.name }}</h3>
+                    <span class="badge bg-secondary">{{ drink.category|title }}</span>
+                    <h5>Ingredients:</h5>
+                    <ul>
+                        {% for ingredient in drink.ingredients|split:"," %}
+                        <li>{{ ingredient }}</li>
+                        {% endfor %}
+                    </ul>
+                    <h5>Method:</h5>
+                    <p>{{ drink.method }}</p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>No drinks available. Add some from the <a href="{% url 'admin:sitepages_drink_add' %}">admin panel</a>.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

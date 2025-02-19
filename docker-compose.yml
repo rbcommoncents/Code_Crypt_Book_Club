@@ -1,0 +1,36 @@
+version: '3.3'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: coterie-db
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    container_name: coterie-web
+    restart: always
+    depends_on:
+      - db
+    env_file:
+      - .env
+    environment:
+      IS_DOCKER: "True"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    command: >
+      sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+volumes:
+  postgres_data:
