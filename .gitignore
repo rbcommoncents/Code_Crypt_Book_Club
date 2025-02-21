@@ -1,0 +1,7 @@
+.venv
+.env
+.dockerignore
+__pycache__/
+db.sqlite3
+/reset_docker.sh
+/media/*
