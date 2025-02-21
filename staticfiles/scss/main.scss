@@ -1,0 +1,149 @@
+@import "variables";
+@import "mixins";
+@import "buttons";
+@import "typography";
+
+
+/* Global Styles */
+body {
+    background-color: $inverted-bg;
+    color: $main-white;
+    font-family: 'Playfair Display', serif;
+}
+
+// Apply plain text only where needed
+.plain-text {
+    font-family: Arial, sans-serif;
+}
+
+/* Navbar */
+.navbar {
+    background-color: $main-gold;
+}
+
+.navbar-brand, .nav-link {
+    color: $main-black !important;
+}
+
+.dropdown-menu {
+    background-color: $main-gold;
+}
+
+.dropdown-item {
+    color: $main-black !important;
+
+    &:hover {
+        background-color: darken($main-gold, 10%);
+    }
+}
+
+/* Banner */
+.banner {
+    background-color: $banner-color;
+    color: $main-white;
+    text-align: center;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* Card Styling */
+.card {
+    background-color: $card-bg;
+    color: $card-text;
+    border: none;
+    border-radius: 8px;
+}
+
+.card-body {
+    h3, h5, p, ul li {
+        color: $card-text;
+    }
+}
+
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #1a1a1a;
+    color: #FFD700;
+    margin: 10% auto;
+    padding: 20px;
+    width: 50%;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.close {
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Star Rating */
+/* Star Rating Container */
+.star-rating {
+    display: flex;
+    flex-direction: row; /* Ensures stars go from left (1) to right (5) */
+    justify-content: center;
+    gap: 5px;
+}
+
+/* Hide Radio Inputs */
+.star-rating input {
+    display: none;
+}
+
+/* Default Star Styling */
+.star-label {
+    font-size: 32px;
+    cursor: pointer;
+    color: #ccc; /* Default unselected star */
+    transition: color 0.3s;
+}
+
+/* Highlight selected stars */
+.star-label.selected {
+    color: gold;
+}
+
+/* Hover Effect */
+.star-label:hover,
+.star-label:hover ~ .star-label {
+    color: gold;
+}
+
+/* Selected Rating Text */
+.selected-rating-text {
+    font-size: 16px;
+    font-weight: bold;
+    color: #b71c1c;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Submit Button: Initially Disabled */
+.submit-rating {
+    background-color: gray;
+    cursor: not-allowed;
+    opacity: 0.6;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+/* Submit Button: Active When Rating Selected */
+.submit-rating.active {
+    background-color: #b71c1c; /* Burgundy */
+    cursor: pointer;
+    opacity: 1;
+}
+
+

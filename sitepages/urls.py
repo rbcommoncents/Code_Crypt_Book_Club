@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import serve_local_song, landing_page, DrinkListView, ProfileView, ProfileEditView, SongListView, SongUploadView, DrinkViewSet, SongViewSet
+from .views import rate_drink, rate_song, serve_local_song, landing_page, DrinkListView, ProfileView, ProfileEditView, SongListView, SongUploadView, DrinkViewSet, SongViewSet
+from . import views
 
 router = DefaultRouter()
 router.register(r'drinks', DrinkViewSet)
@@ -10,9 +11,11 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path("", landing_page, name="landing"),
     path('drinks/', DrinkListView.as_view(), name='drink_list'),
+    path('drinks/rate/<int:drink_id>/', views.rate_drink, name='rate_drink'),
     path("profile/", ProfileView.as_view(), name="profile_view"),
     path("profile/edit/", ProfileEditView.as_view(), name="profile_edit"),
     path("music/", SongListView.as_view(), name="song_list"),
+    path("music/rate/<int:song_id>/", views.rate_song, name="rate_song"),
     path("music/upload/", SongUploadView.as_view(), name="song_upload"),
     path("music/play/<int:song_id>/", serve_local_song, name="serve_local_song"),
 ]

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load split_filter %}
+{% load static %}
 
 {% block title %}Drinks List{% endblock %}
 
@@ -8,7 +9,7 @@
     <h1 class="text-center">Coffee & Tea Drinks</h1>
 
     <div class="text-end mb-3">
-        <a href="{% url 'admin:sitepages_drink_add' %}" class="btn btn-success">➕ Add a New Drink</a>
+<!--      <a href="{% url 'admin:sitepages_drink_add' %}" class="btn btn-success">➕ Add a New Drink</a> -->  
     </div>
 
     <div class="row">
@@ -16,7 +17,12 @@
         <div class="col-md-6 mb-4">
             <div class="card">
                 <div class="card-body">
-                    <h3 class="card-title">{{ drink.name }}</h3>
+                    <h3 class="card-title d-flex justify-content-between">
+                        {{ drink.name }}
+                        <span class="badge bg-warning text-dark">
+                            ⭐ {{ drink.average_rating|floatformat:1 }}/5
+                        </span>
+                    </h3>
                     <span class="badge bg-secondary">{{ drink.category|title }}</span>
                     <h5>Ingredients:</h5>
                     <ul>
@@ -26,6 +32,34 @@
                     </ul>
                     <h5>Method:</h5>
                     <p>{{ drink.method }}</p>
+
+                    {% if not drink.user_has_rated %}
+                    <!-- Rating Section -->
+                    <div class="rating-section">
+                        <form method="POST" action="{% url 'rate_drink' drink.id %}" class="rating-form">
+                            {% csrf_token %}
+
+                            <label for="id_rating">Your Rating:</label>
+                            <div class="star-rating">
+                                {% for i in "12345" %}
+                                <input type="radio" name="rating" value="{{ forloop.counter }}" id="rating-{{ forloop.counter }}-{{ drink.id }}" data-drink-id="{{ drink.id }}">
+                                <label for="rating-{{ forloop.counter }}-{{ drink.id }}" class="star-label" data-value="{{ forloop.counter }}">&#9733;</label>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Comment Field -->
+                            <textarea name="comment" class="form-control mt-2" placeholder="Leave a comment..."></textarea>
+
+                            <!-- Display the selected rating value -->
+                            <p class="selected-rating-text" id="selected-rating-{{ drink.id }}">Selected Rating: None</p>
+
+                            <button type="submit" class="btn btn-burgundy mt-2 submit-rating">Submit Rating</button>
+                        </form>
+                    </div>                        
+                    {% else %}
+                    <p class="text-success">You have already rated this drink.</p>
+                    {% endif %}
+
                 </div>
             </div>
         </div>
@@ -34,4 +68,7 @@
         {% endfor %}
     </div>
 </div>
+{% endblock %}
+{% block extra_scripts %}
+<script src="{% static 'js/rating_drinks.js' %}" defer></script>
 {% endblock %}

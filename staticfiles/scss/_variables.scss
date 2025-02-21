@@ -1,0 +1,19 @@
+// Color Palette
+$main-black: #000000;
+$main-gold: #FFD700;
+$main-white: #FFFFFF;
+$complementary-blue: #003366;
+$complementary-burgundy: #800020;
+
+// Background Colors
+$inverted-bg: #1a1a1a;  // Dark mode background
+$card-bg: #121212; // Dark Grey for Card Background
+$card-text: $main-gold;
+$banner-color: $complementary-burgundy;
+
+// Button Colors
+$btn-primary-bg: $main-gold;
+$btn-primary-text: $main-black;
+$btn-secondary-bg: $complementary-burgundy;
+$btn-secondary-text: $main-white;
+$btn-hover-darken: 10%;

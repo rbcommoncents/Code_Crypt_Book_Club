@@ -1,0 +1,48 @@
+/* Global Styles */
+body {
+  background-color: #1a1a1a;
+  color: #333;
+  font-family: Arial, sans-serif;
+}
+
+/* Navbar */
+.navbar {
+  background-color: #FFD700;
+}
+
+.navbar-brand, .nav-link {
+  color: #000000 !important;
+}
+
+.dropdown-menu {
+  background-color: #FFD700;
+}
+
+.dropdown-item {
+  color: #000000 !important;
+}
+.dropdown-item:hover {
+  background-color: #ccac00;
+}
+
+/* Banner */
+.banner {
+  background-color: #800020;
+  color: #FFFFFF;
+  text-align: center;
+  padding: 10px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Card Styling */
+.card {
+  background-color: #121212;
+  color: #FFD700;
+  border: none;
+  border-radius: 8px;
+}
+
+.card-body h3, .card-body h5, .card-body p, .card-body ul li {
+  color: #FFD700;
+}/*# sourceMappingURL=main.css.map */

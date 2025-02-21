@@ -1,0 +1,63 @@
+@import "variables";
+@import "mixins";
+
+// Default Button Styling
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+}
+
+// Gold Button
+.btn-gold {
+    background-color: $main-gold;
+    color: $main-black;
+    border: 2px solid $main-gold;
+
+    &:hover {
+        background-color: darken($main-gold, 10%);
+        color: $main-white;
+    }
+}
+
+// Black Button
+.btn-black {
+    background-color: $main-black;
+    color: $main-white;
+    border: 2px solid $main-black;
+
+    &:hover {
+        background-color: lighten($main-black, 10%);
+        color: $main-gold;
+    }
+}
+
+// White Button (Outline Style)
+.btn-white {
+    background-color: transparent;
+    color: $main-white;
+    border: 2px solid $main-white;
+
+    &:hover {
+        background-color: $main-white;
+        color: $main-black;
+    }
+}
+
+// Burgundy Button (Accent Button)
+.btn-burgundy {
+    background-color: $complementary-burgundy;
+    color: $main-white;
+    border: 2px solid $complementary-burgundy;
+
+    &:hover {
+        background-color: darken($complementary-burgundy, 10%);
+        color: $main-gold;
+    }
+}

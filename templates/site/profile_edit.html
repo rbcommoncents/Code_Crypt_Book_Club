@@ -5,9 +5,9 @@
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-success">Save Changes</button>
+        <button type="submit" class="btn btn-gold">Save Changes</button>
     </form>
     <br>
-    <a href="{% url 'profile_view' %}" class="btn btn-secondary">Cancel</a>
+    <a href="{% url 'profile_view' %}" class="btn btn-burgundy">Cancel</a>
 </div>
 {% endblock %}
