@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2>Music Library</h2>
+    <a href="{% url 'song_upload' %}" class="btn btn-primary mb-3">Upload a Song</a>
+    <ul class="list-group">
+        {% for song in songs %}
+        <li class="list-group-item">
+            <strong>{{ song.title }}</strong> - {{ song.artist }} ({{ song.genre }})
+            <br>
+            <audio controls>
+                <source src="{% url 'serve_local_song' song.id %}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </li>
+        {% empty %}
+        <p>No songs available.</p>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
