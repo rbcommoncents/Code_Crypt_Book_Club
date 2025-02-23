@@ -7,3 +7,19 @@
     justify-content: center;
     align-items: center;
 }
+
+// Hover Animation Mixin
+@mixin hover-scale($scale: 1.1) {
+    transition: transform 0.3s ease-in-out;
+    &:hover {
+        transform: scale($scale);
+    }
+}
+
+// Icon Hover Color Change
+@mixin hover-color($color) {
+    transition: color 0.3s ease-in-out;
+    &:hover {
+        color: $color;
+    }
+}

@@ -1,17 +1,17 @@
 from django.http import FileResponse, Http404, JsonResponse
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.views.generic import ListView, DetailView, UpdateView, CreateView
 from django.conf import settings
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 import os
 import boto3
 import json
 from django.db.models import Avg, Q
-from rest_framework import viewsets
-from .models import Drink, Song, DrinkRating, SongRating
-from .forms import SongUploadForm, DrinkRatingForm, SongRatingForm
-from .serializers import DrinkSerializer, SongSerializer
+from rest_framework import viewsets, permissions
+from .models import Drink, Song, DrinkRating, SongRating, Art
+from .forms import SongUploadForm, DrinkRatingForm, SongRatingForm, ArtForm
+from .serializers import DrinkSerializer, SongSerializer, ArtSerializer
 from accounts.models import CustomUser
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -74,6 +74,11 @@ class DrinkViewSet(viewsets.ModelViewSet):
     queryset = Drink.objects.all()
     serializer_class = DrinkSerializer
 
+    def get_permissions(self):
+        if self.action in ["create", "update", "partial_update", "destroy"]:
+            return [permissions.IsAdminUser()]
+        return [permissions.IsAuthenticated()]
+
 
 # Profile/Bio Models
 class ProfileView(LoginRequiredMixin, DetailView):
@@ -126,7 +131,7 @@ class SongListView(ListView):
         if not os.path.exists(os.path.dirname(local_path)):
             os.makedirs(os.path.dirname(local_path), exist_ok=True)
 
-        if not os.path.exists(local_path):  # Only download if it doesn't exist
+        if not os.path.exists(local_path): 
             s3_client = boto3.client("s3",
                 aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
                 aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
@@ -148,16 +153,14 @@ def rate_song(request, song_id):
 
     if request.method == "POST":
         try:
-            data = json.loads(request.body)  # Ensure JSON data is read
+            data = json.loads(request.body) 
             rating_value = int(data.get("rating", 0))
             comment = data.get("comment", "").strip() or ""
 
-            # Check if user has already rated the song
             existing_rating = SongRating.objects.filter(user=request.user, song=song).first()
             if existing_rating:
                 return JsonResponse({"success": False, "error": "You have already rated this song."}, status=400)
 
-            # Save the rating
             rating = SongRating.objects.create(
                 user=request.user,
                 song=song,
@@ -181,15 +184,93 @@ class SongUploadView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy("song_list")
 
 def serve_local_song(request, song_id):
-
+    """Downloads a song from AWS S3 and serves it locally."""
     song = get_object_or_404(Song, id=song_id)
     local_path = os.path.join(settings.MEDIA_ROOT, "temp_music", os.path.basename(song.audio_file.name))
 
-    try:
+    s3_client = boto3.client(
+        "s3",
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+        region_name=settings.AWS_S3_REGION_NAME
+    )
+
+    # Ensure temp_songs directory exists
+    os.makedirs(os.path.dirname(local_path), exist_ok=True)
+
+    if not os.path.exists(local_path):  # Only download if missing
+        try:
+            s3_client.download_file(settings.AWS_STORAGE_BUCKET_NAME, song.audio_file.name, local_path)
+        except Exception as e:
+            raise Http404(f"Song file not found in S3: {e}")
+
+    # Serve the file if it exists
+    if os.path.exists(local_path):
         return FileResponse(open(local_path, "rb"), content_type="audio/mpeg")
-    except FileNotFoundError:
-        raise Http404("Song file not found.")
+    else:
+        raise Http404("Local song file is missing.")
 
 class SongViewSet(viewsets.ModelViewSet):
     queryset = Song.objects.all()
     serializer_class = SongSerializer
+
+#// SERVE THE WELCOME VIDEO //#
+
+def get_video_from_s3():
+    s3_client = boto3.client(
+        "s3",
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+        region_name=settings.AWS_S3_REGION_NAME
+    )
+
+    local_path = os.path.join(settings.MEDIA_ROOT, "videos", "welcome.mp4")
+    
+    os.makedirs(os.path.dirname(local_path), exist_ok=True)
+
+    if not os.path.exists(local_path): 
+        try:
+            s3_client.download_file(settings.AWS_STORAGE_BUCKET_NAME, "videos/welcome.mp4", local_path)
+            print(f"Downloaded video to: {local_path}")
+        except Exception as e:
+            print(f"Failed to download video: {e}")
+            return None  # Indicate failure
+
+    return local_path 
+
+def serve_local_video(request):
+    video_path = get_video_from_s3()
+
+    if video_path and os.path.exists(video_path):
+        return FileResponse(open(video_path, "rb"), content_type="video/mp4")
+    else:
+        raise Http404("Video not found.")
+
+#// Art Views \\#
+class ArtListView(ListView):
+    model = Art
+    template_name = "site/art_list.html"
+    context_object_name = "artworks"
+
+class ArtDetailView(DetailView):
+    model = Art
+    template_name = "site/art_detail.html"
+    context_object_name = "artwork"
+
+class ArtViewSet(viewsets.ModelViewSet):    
+    queryset = Art.objects.all()
+    serializer_class = ArtSerializer
+
+    def get_permissions(self):
+        if self.action in ["create", "update", "partial_update", "destroy"]:
+            return [permissions.IsAdminUser()] 
+        return [permissions.AllowAny()]
+
+class ArtCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = Art
+    form_class = ArtForm
+    template_name = "site/art_create.html"
+    success_url = reverse_lazy("art_list")
+
+    def test_func(self):
+        return self.request.user.is_staff

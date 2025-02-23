@@ -4,8 +4,44 @@
 
 {% block content %}
 <div class="container text-center mt-5">
-    <h1>Welcome to My Site!</h1>
+    <h1>Welcome!</h1>
     <p>Explore and enjoy.</p>
-    <a href="{% url 'admin:index' %}" class="btn btn-gold">Go to Admin</a>
+
+    <div class="video-container my-4">
+        <video width="600" controls autoplay muted loop>
+            <source src="{% url 'serve_local_video' %}" type="video/mp4"> 
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <div class="row feature-icons text-center">
+        <div class="col-md-4">
+            <a href="{% url 'drink_list' %}" class="feature-link">
+                <div class="feature-box coffee">
+                    <i class="fas fa-coffee fa-7x"></i>
+                    <h3>Coffee & Tea</h3>
+                    <p>Relax and enjoy the moment.</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="{% url 'song_list' %}" class="feature-link">
+                <div class="feature-box music">
+                    <i class="fas fa-music fa-7x"></i>
+                    <h3>Music & Rhythm</h3>
+                    <p>Let the beats move you.</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="{% url 'art_list' %}" class="feature-link">
+                <div class="feature-box art">
+                    <i class="fas fa-paint-brush fa-7x"></i>
+                    <h3>Art & Creativity</h3>
+                    <p>Express yourself freely.</p>
+                </div>
+            </a>
+        </div>
+    </div>
 </div>
 {% endblock %}

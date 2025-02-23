@@ -1,22 +1,18 @@
-# Use Python base image
-FROM python:3.10
+# Use latest Python version
+FROM python:3.12-slim
 
-# Set the working directory inside the container
+# Set working directory inside the container
 WORKDIR /app
 
-# Install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy the project files into the container
+COPY . /app
 
-# Copy project files into the container
-COPY . .
+# Install dependencies
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
 
-# Expose Django's default port
+# Expose the application port
 EXPOSE 8000
 
-# Set environment variables for local development
-ENV PYTHONUNBUFFERED=1 \
-    DEBUG=True
-
-# Run migrations and start Django without creating a superuser
-CMD ["sh", "-c", "python wait_for_db.py && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+# Run migrations and start the application
+CMD ["sh", "-c", "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn --workers 3 --bind 0.0.0.0:8000 Coterie.wsgi:application"]

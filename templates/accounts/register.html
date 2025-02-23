@@ -1,10 +1,56 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Register</h2>
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Sign Up</button>
-</form>
-<p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+{% load crispy_forms_tags %}
+<style>
+    .form-label {
+        color: #f8f9fa !important; 
+    }
+
+    .asteriskField {
+        color: #dc3545 !important; 
+    }
+
+    .form-text {
+        color: #d1d1d1 !important;  
+    }
+
+    .invalid-feedback, .text-danger {
+        color: #ffb3b3 !important; 
+    }
+
+    .form-control {
+        background-color: #343a40 !important; 
+        color: #f8f9fa !important; 
+        border: 1px solid #495057 !important;  
+    }
+
+    .form-control:focus {
+        border-color: #007bff !important; 
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5) !important;
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow p-4">
+                <h2 class="mb-3 text-center">Create an Account</h2>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+
+                    <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+                </form>
+
+                <hr>
+
+                <p class="text-center">
+                    Already have an account? <a href="{% url 'login' %}">Login here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

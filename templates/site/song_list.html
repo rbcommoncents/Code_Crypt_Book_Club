@@ -8,7 +8,7 @@
     <!-- Search Bar -->
     <form method="GET" action="{% url 'song_list' %}" class="mb-3">
         <input type="text" name="q" class="form-control" placeholder="Search songs by title, artist, or genre..." value="{{ request.GET.q }}">
-        <button type="submit" class="btn btn-primary mt-2">Search</button>
+        <button type="submit" class="btn btn-burgundy mt-2">Search</button>
     </form>
 
     <a href="{% url 'song_upload' %}" class="btn btn-gold mb-3">Upload a Song</a>
@@ -24,7 +24,6 @@
             </audio>
             <br>
 
-            <!-- Show average rating -->
             <span class="badge bg-warning text-dark">
                 ⭐ {{ song.average_rating|floatformat:1 }}/5
             </span>
@@ -42,22 +41,16 @@
                         <label for="rating-{{ forloop.counter }}-{{ song.id }}" class="star-label" data-value="{{ forloop.counter }}">&#9733;</label>
                         {% endfor %}
                     </div>
-
-                    <!-- Comment Field -->
                     <textarea name="comment" class="form-control mt-2" placeholder="Leave a comment..."></textarea>
-
-                    <!-- Display the selected rating value -->
                     <p class="selected-rating-text" id="selected-rating-{{ song.id }}">Selected Rating: None</p>
-
                     <button type="button" class="btn btn-primary mt-2 submit-rating" disabled>Submit Rating</button>
                 </form>
-            </div>
-
             </div>
             {% else %}
             <p class="text-success">You have already rated this song.</p>
             {% endif %}
         </li>
+        <hr class="song-divider">
         {% empty %}
         <p>No songs available.</p>
         {% endfor %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+    <h2 class="text-center">Discussion Topics</h2>
+
+    <!-- Search Form -->
+    <form method="GET" class="mb-4">
+        <input type="text" name="q" class="form-control" placeholder="Search topics..." value="{{ query }}">
+        <button type="submit" class="btn btn-burgundy mt-2">Search</button>
+    </form>
+
+    <!-- List of Topics -->
+    <ul class="list-group">
+        {% for topic in topics %}
+            <li class="list-group-item">
+                <a href="{% url 'chat:topic_detail' topic.id %}"><strong>{{ topic.title }}</strong></a>
+                <p class="text-muted small">Started by {{ topic.created_by }} | {{ topic.created_at|date:"M d, Y" }}</p>
+            </li>
+        {% empty %}
+            <p>No topics found.</p>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'chat:topic_create' %}" class="btn btn-gold mt-4">Start a New Topic</a>
+</div>
+
+{% endblock %}

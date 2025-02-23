@@ -1,8 +1,8 @@
-version: '3.3'
+version: '3.8'  # Use latest version
 
 services:
   db:
-    image: postgres:latest
+    image: postgres:16  # Latest stable Postgres version
     container_name: coterie-db
     restart: always
     env_file:
@@ -31,6 +31,9 @@ services:
     ports:
       - "8000:8000"
     command: >
-      sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             gunicorn --workers 3 --bind 0.0.0.0:8000 Coterie.wsgi:application"
+
 volumes:
   postgres_data:

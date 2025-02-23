@@ -1,5 +1,5 @@
 from django import forms
-from .models import Drink, Song, DrinkRating, SongRating
+from .models import Drink, Song, DrinkRating, SongRating, Art
 
 #// Drink Forms //#
 class DrinkForm(forms.ModelForm):
@@ -20,7 +20,7 @@ class DrinkRatingForm(forms.ModelForm):
             'comment': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Leave a comment...', 'class': 'form-control'}),
         }
 
-#// Song Forms //#
+#// Song Forms \\#
 class SongUploadForm(forms.ModelForm):
     class Meta:
         model = Song
@@ -34,4 +34,13 @@ class SongRatingForm(forms.ModelForm):
         widgets = {
             'rating': forms.RadioSelect(choices=[(i, str(i)) for i in range(1, 6)]),  # 1-5 star selection
             'comment': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Leave a comment...', 'class': 'form-control'}),
+        }
+
+#// Art Forms \\#
+class ArtForm(forms.ModelForm):    
+    class Meta:
+        model = Art
+        fields = ["title", "artist", "description", "image"]
+        widgets = {
+            "description": forms.Textarea(attrs={"rows": 4}),
         }

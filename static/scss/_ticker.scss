@@ -1,0 +1,11 @@
+@mixin ticker-animation($duration: 20s) {
+    @keyframes tickerScroll {
+        from {
+            transform: translateX(100%);
+        }
+        to {
+            transform: translateX(-100%);
+        }
+    }
+    animation: tickerScroll $duration linear infinite;
+}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .text-muted, p, small {
+        color: #f8f9fa !important; 
+    }
+
+    .list-group-item {
+        background-color: transparent; 
+        color: #f8f9fa !important; 
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+</style>
+
+<div class="container mt-4">
+    <h2 class="text-center">{{ topic.title }}</h2>
+    <p class="text-muted text-center">{{ topic.description }}</p>
+    <hr>
+
+    <!-- Messages -->
+    <ul class="list-group">
+        {% for message in messages %}
+            <li class="list-group-item">
+                <p>{{ message.content }}</p>
+                <small class="text-muted">By {{ message.user }} | {{ message.created_at|date:"M d, Y H:i" }}</small>
+
+                <!-- Replies -->
+                <ul class="list-group mt-2">
+                    {% for reply in message.replies.all %}
+                        <li class="list-group-item">
+                            <p>{{ reply.content }}</p>
+                            <small class="text-muted">By {{ reply.user }} | {{ reply.created_at|date:"M d, Y H:i" }}</small>
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                <a href="{% url 'chat:reply_create' message.id %}" class="btn btn-sm btn-outline-primary mt-2">Reply</a>
+            </li>
+        {% empty %}
+            <p>No messages in this topic yet.</p>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'chat:message_create' topic.id %}" class="btn btn-primary mt-4">Post a Message</a>
+</div>
+
+{% endblock %}

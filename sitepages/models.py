@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.conf import settings
 from django.db.models import Avg
@@ -46,7 +47,7 @@ class Song(models.Model):
     title = models.CharField(max_length=255)
     artist = models.CharField(max_length=255)
     genre = models.CharField(max_length=100)
-    audio_file = models.FileField(upload_to="music/")  # Stores files in AWS S3
+    audio_file = models.FileField(upload_to="music/")
 
     def __str__(self):
         return f"{self.title} - {self.artist}"
@@ -72,3 +73,21 @@ class SongRating(models.Model):
 
     def __str__(self):
         return f"{self.user.username} rated {self.song.title}: {self.rating}/5"
+
+
+# Art Models
+class Art(models.Model):
+    title = models.CharField(max_length=255)
+    artist = models.CharField(max_length=255, blank=True, null=True)
+    description = models.TextField(help_text="Curator's description of the artwork.")
+    image = models.ImageField(upload_to="art_images/", blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def aws_url(self):
+        if self.image:
+            return f"https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/{self.image}"
+        return None  
+
+    def __str__(self):
+        return f"{self.title} by {self.artist or 'Unknown'}"

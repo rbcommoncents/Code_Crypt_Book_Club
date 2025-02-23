@@ -34,7 +34,6 @@
                     <p>{{ drink.method }}</p>
 
                     {% if not drink.user_has_rated %}
-                    <!-- Rating Section -->
                     <div class="rating-section">
                         <form method="POST" action="{% url 'rate_drink' drink.id %}" class="rating-form">
                             {% csrf_token %}
@@ -47,10 +46,8 @@
                                 {% endfor %}
                             </div>
 
-                            <!-- Comment Field -->
                             <textarea name="comment" class="form-control mt-2" placeholder="Leave a comment..."></textarea>
 
-                            <!-- Display the selected rating value -->
                             <p class="selected-rating-text" id="selected-rating-{{ drink.id }}">Selected Rating: None</p>
 
                             <button type="submit" class="btn btn-burgundy mt-2 submit-rating">Submit Rating</button>

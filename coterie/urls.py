@@ -16,9 +16,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from chat.urls import api_urlpatterns
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
     path("", include("sitepages.urls")),
+    path("api-auth/", include("rest_framework.urls")),
+    path("api/v1/dj-rest-auth/", include("dj_rest_auth.urls")),
+    path("api/v1/dj-rest-auth/registration/", include("dj_rest_auth.registration.urls")),
+
+    # Frontend Chat (HTML Pages)
+    path("chat/", include("chat.urls")),
+
+    # API Chat (JSON Responses)
+    path("api/chat/", include(api_urlpatterns)),
 ]

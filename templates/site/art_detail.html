@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ artwork.title }}</h2>
+    <p><strong>Artist:</strong> {{ artwork.artist|default:"Unknown" }}</p>
+    <img src="{{ artwork.aws_url }}" alt="{{ artwork.title }}" class="img-fluid mb-3">
+    <p>{{ artwork.description }}</p>
+    <a href="{% url 'art_list' %}" class="btn btn-secondary">Back to Gallery</a>
+</div>
+{% endblock %}

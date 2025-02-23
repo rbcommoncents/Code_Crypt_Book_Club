@@ -59,6 +59,18 @@
   font-family: Arial, sans-serif;
 }
 
+.from-label {
+  color: #f8f9fa !important;
+}
+
+.form-text {
+  color: #d1d1d1 !important;
+}
+
+.invalid-feedback, .text-danger {
+  color: #ffb3b3 !important;
+}
+
 /* Global Styles */
 body {
   background-color: #1a1a1a;
@@ -92,14 +104,49 @@ body {
 
 /* Banner */
 .banner {
-  background-color: #800020;
-  color: #FFFFFF;
-  text-align: center;
-  padding: 10px;
-  font-size: 20px;
-  font-weight: bold;
+  background: #f8f9fa;
+  padding: 10px 0;
+  overflow: hidden;
+  position: relative;
 }
 
+/* Ticker */
+.ticker-wrapper {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  background: #800020;
+  padding: 15px 0;
+}
+
+.ticker {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 50px;
+  width: -moz-max-content;
+  width: max-content;
+  animation: tickerScroll 35s linear infinite;
+}
+
+.ticker-item {
+  white-space: nowrap;
+  font-size: 16px;
+  padding: 0 30px;
+  font-weight: bold;
+  color: #FFFFFF;
+}
+
+@keyframes tickerScroll {
+  from {
+    transform: translateX(20%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
 /* Card Styling */
 .card {
   background-color: #121212;
@@ -195,4 +242,92 @@ body {
   background-color: #b71c1c; /* Burgundy */
   cursor: pointer;
   opacity: 1;
+}
+
+/* Remove default link styling for feature-box links */
+.feature-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.feature-icons {
+  margin-top: 50px;
+}
+
+/* Simulating a "filling up" effect on hover */
+.feature-box {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.6s ease-in-out;
+  will-change: transform;
+}
+.feature-box:hover {
+  animation: bubbleEffect 3s ease-in-out infinite alternate;
+}
+.feature-box::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  transition: height 1s ease-in-out;
+}
+.feature-box:hover::after {
+  height: 100%;
+}
+
+@keyframes bubbleEffect {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.2);
+  }
+  50% {
+    transform: scale(1.4);
+  }
+  75% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1.5);
+  }
+}
+/* Song Divider */
+.song-divider {
+  border: 0;
+  height: 1px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
+  margin: 20px 0;
+}
+
+.video-container {
+  position: relative;
+  display: inline-block;
+  padding: 20px;
+  background: #f9f4e8;
+  border: 4px solid #4a3f35;
+  border-radius: 15px;
+  box-shadow: 4px 0px 4px #3a2d25, 6px 0px 6px #ffffff;
+  outline: 2px dashed #3a2d25;
+  outline-offset: 5px;
+  max-width: -moz-fit-content;
+  max-width: fit-content;
+  margin: 0 auto 40px auto;
+}
+
+.video-container::before {
+  content: "";
+  position: absolute;
+  width: 110%;
+  height: 110%;
+  left: -5%;
+  top: -5%;
+  background: transparent;
+  border: 3px dashed rgba(74, 63, 53, 0.7);
+  border-radius: 18px;
+  pointer-events: none;
 }/*# sourceMappingURL=main.css.map */

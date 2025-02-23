@@ -1,15 +1,73 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
-    <h2>Profile: {{ user.username }}</h2>
-    <p><strong>Email:</strong> {{ user.email }}</p>
-    <p><strong>Phone:</strong> {{ user.phone_number|default:"N/A" }}</p>
-    {% if user.profile_picture %}
-        <img src="{{ user.profile_picture.url }}" alt="Profile Picture" width="150">
-    {% else %}
-        <p>No profile picture uploaded.</p>
-    {% endif %}
-    <br>
-    <a href="{% url 'profile_edit' %}" class="btn btn-gold">Edit Profile</a>
+{% load static %}
+
+<div class="container mt-4">
+    <h2 class="mb-3">Profile: {{ user.username }}</h2>
+
+    <div class="row">
+        <!-- Left Column: User Information -->
+        <div class="col-md-8">
+            <div class="card p-3 shadow-sm">
+                <h4 class="mb-3">User Information</h4>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Phone:</strong> {{ user.phone_number|default:"N/A" }}</p>
+            </div>
+
+            <!-- Admin-Only Section -->
+            {% if user.is_staff %}
+            <div class="card mt-4 p-3 shadow-sm">
+                <h4 class="mb-3">Admin Controls</h4>
+
+                <!-- API Credentials Section -->
+                <h5>API Credentials</h5>
+                <p><strong>Client ID:</strong> {{ user.api_client.client_id }}</p>
+
+                <p><strong>API Token:</strong>
+                    <span id="api-token" style="display: none;">{{ user.api_client.token }}</span>
+                    <button id="toggle-token" class="btn btn-sm btn-secondary">
+                        <i id="toggle-icon" class="fas fa-eye"></i>  <!-- Eye icon -->
+                    </button>
+                </p>
+
+                <p><strong>Token Created At:</strong> {{ user.api_client.created_at }}</p>
+
+                <form method="post" action="{% url 'regenerate_token' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Regenerate Token</button>
+                </form>
+
+                <!-- Admin Console Access -->
+                <a href="{% url 'admin:index' %}" class="btn btn-dark mt-3">
+                    <i class="fas fa-user-shield"></i> Admin Console
+                </a>
+            </div>
+            {% endif %}
+
+            <div class="mt-4">
+                <a href="{% url 'profile_edit' %}" class="btn btn-primary">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </a>
+            </div>
+        </div>
+
+        <!-- Right Column: Profile Picture -->
+        <div class="col-md-4 text-center">
+            <div class="card p-3 shadow-sm">
+                <h4 class="mb-3">Profile Picture</h4>
+                {% if user.profile_picture %}
+                    <img src="{{ user.aws_profile_picture_url }}" alt="Profile Picture"
+                         class="rounded-circle img-fluid border" width="200">
+                {% else %}
+                    <p class="text-muted">No profile picture uploaded.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/hidden_text.js' %}" defer></script>
 {% endblock %}
